@@ -5,11 +5,14 @@ import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer
 import de.matthiasmann.twl.theme.ThemeManager
 import org.lwjgl.input.{Keyboard, Mouse}
 import org.lwjgl.opengl.{GL11, Display, DisplayMode}
+import util.Logging
 
-object HelloTWL {
+object HelloTWL extends Logging{
 
 	// main method for HelloTWL example.
   def main(args: Array[String]) {
+    logger.info("HelloTWL example started")
+
     try {
       Display.setDisplayMode(new DisplayMode(800, 600))
       Display.create()
@@ -20,7 +23,7 @@ object HelloTWL {
       val bgtest = new BackgroundTest()
       val gui = new GUI(bgtest, renderer)
 
-      val theme = ThemeManager.createThemeManager(getClass.getResource("bgtest.xml"), renderer)
+      val theme = ThemeManager.createThemeManager(getClass.getClassLoader.getResource("bgtest.xml"), renderer)
       gui.applyTheme(theme)
 
       while (!Display.isCloseRequested) {
@@ -34,7 +37,7 @@ object HelloTWL {
       gui.destroy()
       theme.destroy()
     } catch {
-      case e: Exception => e.printStackTrace()
+      case e: Exception => logger.error("Application terminated unexpectedly", e)
     }
     Display.destroy()
   }

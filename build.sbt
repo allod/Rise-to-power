@@ -8,4 +8,6 @@ libraryDependencies += "xpp3" % "xpp3" % "1.1.4c"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "1.8" % "test"
 
+libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.0.3"
+
 seq(lwjglSettings: _*)
