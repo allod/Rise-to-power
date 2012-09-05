@@ -8,6 +8,7 @@ import org.lwjgl.opengl.{GL11, Display, DisplayMode}
 
 object HelloTWL {
 
+	// main method for HelloTWL example.
   def main(args: Array[String]) {
     try {
       Display.setDisplayMode(new DisplayMode(800, 600))
