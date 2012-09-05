@@ -1,3 +1,5 @@
+package org.risetopower
+
 import de.matthiasmann.twl._
 import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer
 import de.matthiasmann.twl.theme.ThemeManager
@@ -20,7 +22,7 @@ object HelloTWL {
       val theme = ThemeManager.createThemeManager(getClass.getResource("bgtest.xml"), renderer)
       gui.applyTheme(theme)
 
-      while(!Display.isCloseRequested) {
+      while (!Display.isCloseRequested) {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT)
 
         gui.update()
@@ -37,9 +39,9 @@ object HelloTWL {
   }
 
   def reduceInputLag() {
-    GL11.glGetError();          // this call will burn the time between vsyncs
-    Display.processMessages();  // process new native messages since Display.update();
-    Mouse.poll();               // now update Mouse events
-    Keyboard.poll();            // and Keyboard too
+    GL11.glGetError(); // this call will burn the time between vsyncs
+    Display.processMessages(); // process new native messages since Display.update();
+    Mouse.poll(); // now update Mouse events
+    Keyboard.poll(); // and Keyboard too
   }
 }

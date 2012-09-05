@@ -1,3 +1,5 @@
+package org.risetopower
+
 import java.nio.{ByteOrder, ByteBuffer}
 import de.matthiasmann.twl._
 import de.matthiasmann.twl.renderer.Image
