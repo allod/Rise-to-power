@@ -2,11 +2,13 @@ package org.risetopower
 
 import java.nio.{ByteOrder, ByteBuffer}
 import de.matthiasmann.twl._
+import de.matthiasmann.twlscala.Label
 import de.matthiasmann.twl.renderer.Image
 import org.lwjgl.opengl.GL11
 import renderer.{DynamicImage, Renderer}
+import util.Logging
 
-class BackgroundTest extends DesktopArea {
+class BackgroundTest extends DesktopArea with Logging {
   val fpsCounter = new FPSCounter()
   val mouseCoords = new Label()
 
