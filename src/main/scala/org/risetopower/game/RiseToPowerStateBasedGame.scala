@@ -15,6 +15,6 @@ class RiseToPowerStateBasedGame extends TWLStateBasedGame("RiseToPowerStateBased
      addState (new MainMenuState)
   }
 
-  override def themeURL : URL = getClass.getClassLoader.getResource("bgtest.xml")
+  override def themeURL : URL = getClass.getClassLoader.getResource("inventory.xml")
 
 }
