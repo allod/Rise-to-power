@@ -4,89 +4,42 @@ import de.matthiasmann.twl.Event
 import de.matthiasmann.twl.ThemeInfo
 import de.matthiasmann.twl.Widget
 
-/**
- *
- * @author Matthias Mann
- */
 class InventoryPanel(numSlotsX: Int, numSlotsY: Int) extends Widget {
-  private final val slot: Array[ItemSlot] = new Array[ItemSlot](numSlotsX * numSlotsY)
+  private val slots = new Array[ItemSlot](numSlotsX * numSlotsY)
   private var slotSpacing: Int = 0
-  private var dragSlot: ItemSlot = null
-  private var dropSlot: ItemSlot = null
+  private var dragSlot: ItemSlot = _
+  private var dropSlot: ItemSlot = _
 
-  val listener: DragListener = new DragListener {
-    def dragStarted(slot: ItemSlot, evt: Event) {
-      InventoryPanel.this.dragStarted(slot, evt)
-    }
+  val listener: DragListener = createDragListener()
 
-    def dragging(slot: ItemSlot, evt: Event) {
-      InventoryPanel.this.dragging(slot, evt)
-    }
-
-    def dragStopped(slot: ItemSlot, evt: Event) {
-      InventoryPanel.this.dragStopped(slot, evt)
-    }
+  for(i <- 0 until slots.length) {
+    slots(i) = new ItemSlot
+    slots(i).listener = listener
+    add(slots(i))
   }
-  {
-    var i: Int = 0
-    while (i < slot.length) {
-      {
-        slot(i) = new ItemSlot
-        slot(i).listener = listener
-        add(slot(i))
-      }
-      ({
-        i += 1;
-        i
-      })
-    }
-  }
-  slot(0).item = "red"
-  slot(1).item = "green"
-  slot(2).item = "blue"
-  slot(3).item = "yellow"
+  slots(0).item = "red"
+  slots(1).item = "green"
+  slots(2).item = "blue"
+  slots(3).item = "yellow"
 
-  override def getPreferredInnerWidth: Int = {
-    return (slot(0).getPreferredWidth + slotSpacing) * numSlotsX - slotSpacing
-  }
+  override def getPreferredInnerWidth: Int = (slots(0).getPreferredWidth + slotSpacing) * numSlotsX - slotSpacing
 
-  override def getPreferredInnerHeight: Int = {
-    return (slot(0).getPreferredHeight + slotSpacing) * numSlotsY - slotSpacing
-  }
+  override def getPreferredInnerHeight: Int = (slots(0).getPreferredHeight + slotSpacing) * numSlotsY - slotSpacing
 
-  protected override def layout {
-    val slotWidth: Int = slot(0).getPreferredWidth
-    val slotHeight: Int = slot(0).getPreferredHeight
-    var row: Int = 0
+  protected override def layout() {
+    val slotWidth: Int = slots(0).getPreferredWidth
+    val slotHeight: Int = slots(0).getPreferredHeight
     var y: Int = getInnerY
     var i: Int = 0
-    while (row < numSlotsY) {
-      {
-        {
-          var col: Int = 0
-          var x: Int = getInnerX
-          while (col < numSlotsX) {
-            {
-              slot(i).adjustSize
-              slot(i).setPosition(x, y)
-              x += slotWidth + slotSpacing
-            }
-            ({
-              col += 1;
-              col
-            })
-            ({
-              i += 1;
-              i
-            })
-          }
-        }
-        y += slotHeight + slotSpacing
+    for (row <- 0 until numSlotsY) {
+      var x: Int = getInnerX
+      for (col <- 0 until numSlotsX) {
+        slots(i).adjustSize()
+        slots(i).setPosition(x, y)
+        x += slotWidth + slotSpacing
+        i += 1
       }
-      ({
-        row += 1;
-        row
-      })
+      y += slotHeight + slotSpacing
     }
   }
 
@@ -129,21 +82,28 @@ class InventoryPanel(numSlotsX: Int, numSlotsY: Int) extends Widget {
   private def setDropSlot(slot: ItemSlot) {
     if (slot ne dropSlot) {
       if (dropSlot != null) {
-        dropSlot.setDropState(false, false)
+        dropSlot.setDropState(drop = false, ok = false)
       }
       dropSlot = slot
       if (dropSlot != null) {
-        dropSlot.setDropState(true, (dropSlot eq dragSlot ) || dropSlot.canDrop)
+        dropSlot.setDropState(drop = true, ok = (dropSlot eq dragSlot) || dropSlot.canDrop)
+      }
+    }
+  }
+
+  def createDragListener() = {
+    new DragListener {
+      def dragStarted(slot: ItemSlot, evt: Event) {
+        InventoryPanel.this.dragStarted(slot, evt)
+      }
+
+      def dragging(slot: ItemSlot, evt: Event) {
+        InventoryPanel.this.dragging(slot, evt)
+      }
+
+      def dragStopped(slot: ItemSlot, evt: Event) {
+        InventoryPanel.this.dragStopped(slot, evt)
       }
     }
   }
 }
-
-trait DragListener {
-  def dragStarted(slot: ItemSlot, evt: Event)
-
-  def dragging(slot: ItemSlot, evt: Event)
-
-  def dragStopped(slot: ItemSlot, evt: Event)
-}
-
