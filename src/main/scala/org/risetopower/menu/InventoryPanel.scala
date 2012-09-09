@@ -17,10 +17,10 @@ class InventoryPanel(numSlotsX: Int, numSlotsY: Int) extends Widget {
     slots(i).listener = listener
     add(slots(i))
   }
-  slots(0).item = "red"
-  slots(1).item = "green"
-  slots(2).item = "blue"
-  slots(3).item = "yellow"
+  slots(0).item = Some("red")
+  slots(1).item = Some("green")
+  slots(2).item = Some("blue")
+  slots(3).item = Some("yellow")
 
   override def getPreferredInnerWidth: Int = (slots(0).getPreferredWidth + slotSpacing) * numSlotsX - slotSpacing
 
@@ -49,7 +49,7 @@ class InventoryPanel(numSlotsX: Int, numSlotsY: Int) extends Widget {
   }
 
   private[menu] def dragStarted(slot: ItemSlot, evt: Event) {
-    if (slot.item != null) {
+    slot.item foreach {_ =>
       dragSlot = slot
       dragging(slot, evt)
     }
@@ -60,8 +60,7 @@ class InventoryPanel(numSlotsX: Int, numSlotsY: Int) extends Widget {
       val w: Widget = getWidgetAt(evt.getMouseX, evt.getMouseY)
       if (w.isInstanceOf[ItemSlot]) {
         setDropSlot(w.asInstanceOf[ItemSlot])
-      }
-      else {
+      } else {
         setDropSlot(null)
       }
     }
@@ -72,7 +71,7 @@ class InventoryPanel(numSlotsX: Int, numSlotsY: Int) extends Widget {
       dragging(slot, evt)
       if (dropSlot != null && dropSlot.canDrop && dropSlot != dragSlot) {
         dropSlot.item = dragSlot.item
-        dragSlot.item = null
+        dragSlot.item = None
       }
       setDropSlot(null)
       dragSlot = null

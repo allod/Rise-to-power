@@ -13,20 +13,20 @@ object ItemSlot {
 
 class ItemSlot extends Widget {
 
-  private[this] var _item: String = _
-  var icon: Image = _
+  private[this] var _item: Option[String] = None
+  var icons: Option[ParameterMap] = None
+  var icon: Option[Image] = None
   var listener: DragListener = _
   var dragActive: Boolean = _
-  var icons: ParameterMap = _
 
   def item = _item
 
-  def item_=(item: String) {
+  def item_=(item: Option[String]) {
     _item = item
     findIcon()
   }
 
-  def canDrop: Boolean = item == null
+  def canDrop: Boolean = item == None
 
   def setDropState(drop: Boolean, ok: Boolean) {
     val as = getAnimationState
@@ -61,33 +61,29 @@ class ItemSlot extends Widget {
   }
 
   override def paintWidget(gui: GUI) {
-    if (!dragActive && icon != null) {
-      icon.draw(getAnimationState, getInnerX, getInnerY, getInnerWidth, getInnerHeight)
+    for (i <- icon; if !dragActive ) {
+      i.draw(getAnimationState, getInnerX, getInnerY, getInnerWidth, getInnerHeight)
     }
   }
 
   override def paintDragOverlay(gui: GUI, mouseX: Int, mouseY: Int, modifier: Int) {
-    if (icon != null) {
-      val innerWidth = getInnerWidth
-      val innerHeight = getInnerHeight
-      icon.draw(getAnimationState,
-        mouseX - innerWidth / 2,
-        mouseY - innerHeight / 2,
-        innerWidth, innerHeight)
+    icon foreach { value =>
+      val x: Int = mouseX - getInnerWidth / 2
+      val y: Int = mouseY - getInnerHeight / 2
+      value.draw(getAnimationState, x, y, getInnerWidth, getInnerHeight)
     }
   }
 
   override def applyTheme(themeInfo: ThemeInfo) {
     super.applyTheme(themeInfo)
-    icons = themeInfo.getParameterMap("icons")
+    icons = Option(themeInfo.getParameterMap("icons"))
     findIcon()
   }
 
   def findIcon() {
-    if (item == null || icons == null) {
-      icon = null
-    } else {
-      icon = icons.getImage(item)
+    icon = (icons, item) match {
+      case (Some(iconsValue), Some(itemValue)) => Option(iconsValue.getImage(itemValue))
+      case _ => None
     }
   }
 }
