@@ -11,3 +11,5 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "1.8" % "test"
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.0.3"
 
 seq(lwjglSettings: _*)
+
+lwjgl.version := "2.8.4"
