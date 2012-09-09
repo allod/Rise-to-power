@@ -10,6 +10,6 @@ class RiseToPowerStateBasedGame extends TWLStateBasedGame("RiseToPowerStateBased
      addState (new MainMenuState)
   }
 
-  override def themeURL : URL = getClass.getClassLoader.getResource("inventory.xml")
+  override def themeURL : URL = getClass.getClassLoader.getResource("lesson1.xml")
 
 }

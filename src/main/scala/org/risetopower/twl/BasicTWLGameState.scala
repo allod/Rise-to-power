@@ -47,9 +47,6 @@ import org.newdawn.slick.state.StateBasedGame
  * @author Matthias Mann
  */
 abstract class BasicTWLGameState extends BasicGameState {
-
-  val THEME = ""
-
   private var rootPaneField:RootPane = _
 
   /**
@@ -68,6 +65,8 @@ abstract class BasicTWLGameState extends BasicGameState {
 
     rootPaneField
   }
+
+  def themeName : String
 
   def rootPane_=(value:RootPane) {
       rootPaneField = value
@@ -106,7 +105,7 @@ abstract class BasicTWLGameState extends BasicGameState {
    */
   def createRootPane() : RootPane = {
     val rp = new RootPane(this)
-    rp.setTheme(THEME)
+    rp.setTheme(themeName)
     rp.getOrCreateActionMap.addMapping(this)
     rp
   }
