@@ -7,8 +7,8 @@ import de.matthiasmann.twl.Widget
 class InventoryPanel(numSlotsX: Int, numSlotsY: Int) extends Widget {
   private val slots = new Array[ItemSlot](numSlotsX * numSlotsY)
   private var slotSpacing: Int = 0
-  private var dragSlot: ItemSlot = _
-  private var dropSlot: ItemSlot = _
+  private var dragSlot: Option[ItemSlot] = None
+  private var dropSlot: Option[ItemSlot] = None
 
   val listener: DragListener = createDragListener()
 
@@ -50,13 +50,13 @@ class InventoryPanel(numSlotsX: Int, numSlotsY: Int) extends Widget {
 
   private[menu] def dragStarted(slot: ItemSlot, evt: Event) {
     slot.item foreach {_ =>
-      dragSlot = slot
+      dragSlot = Option(slot) //TODO  consider making slot option
       dragging(slot, evt)
     }
   }
 
   private[menu] def dragging(slot: ItemSlot, evt: Event) {
-    if (dragSlot != null) {
+    dragSlot foreach { _ =>
       val w: Widget = getWidgetAt(evt.getMouseX, evt.getMouseY)
       if (w.isInstanceOf[ItemSlot]) {
         setDropSlot(w.asInstanceOf[ItemSlot])
@@ -67,25 +67,33 @@ class InventoryPanel(numSlotsX: Int, numSlotsY: Int) extends Widget {
   }
 
   private[menu] def dragStopped(slot: ItemSlot, evt: Event) {
-    if (dragSlot != null) {
+    dragSlot foreach { _ =>
       dragging(slot, evt)
-      if (dropSlot != null && dropSlot.canDrop && dropSlot != dragSlot) {
-        dropSlot.item = dragSlot.item
-        dragSlot.item = None
+      for (dropSlotValue <- dropSlot; dragSlotValue <- dragSlot
+           if dropSlotValue != dragSlotValue
+           if dropSlotValue.canDrop) {
+        dropSlotValue.item = dragSlotValue.item
+        dragSlotValue.item = None
       }
       setDropSlot(null)
-      dragSlot = null
+      dragSlot = None
     }
   }
 
+  //TODO refactorme
   private def setDropSlot(slot: ItemSlot) {
-    if (slot ne dropSlot) {
-      if (dropSlot != null) {
-        dropSlot.setDropState(drop = false, ok = false)
+    val dropSlotValue = dropSlot getOrElse null
+    if (slot ne dropSlotValue) {
+      if (dropSlotValue != null) {
+        dropSlotValue.setDropState(drop = false, ok = false)
       }
-      dropSlot = slot
-      if (dropSlot != null) {
-        dropSlot.setDropState(drop = true, ok = (dropSlot eq dragSlot) || dropSlot.canDrop)
+      dropSlot = Option(slot)
+      if (slot != null) {
+        val ok = dragSlot match {
+          case Some(y) => slot.canDrop  || (slot eq y)
+          case None => slot.canDrop
+        }
+        slot.setDropState(drop = true, ok = ok)
       }
     }
   }
