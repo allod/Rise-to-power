@@ -10,7 +10,7 @@ object SlickBasicGame {
   def main(args: Array[String]) {
     val app: AppGameContainer = new AppGameContainer(new SlickBasicGame)
     app.setDisplayMode(800, 600, false)
-    app.start
+    app.start()
   }
 }
 
