@@ -11,11 +11,11 @@ class MainMenuState extends BasicTWLGameState {
   override def getID = RiseToPowerStateConstants.MAIN_MENU_ID
 
   val frame = new ResizableFrame()
-
-  override def init(gameContainer: GameContainer, stateBasedGame: StateBasedGame) {
     val fpsCounter = new FPSCounter()
 
     val inventoryPanel = new InventoryPanel(10, 5)
+
+  override def init(gameContainer: GameContainer, stateBasedGame: StateBasedGame) {
 
     frame.setTitle("Inventory")
     frame.setResizableAxis(ResizableFrame.ResizableAxis.NONE)
@@ -41,5 +41,22 @@ class MainMenuState extends BasicTWLGameState {
   }
 
   override def render(gameContainer: GameContainer, stateBasedGame: StateBasedGame, graphics: Graphics) {
+  }
+
+  def themeName = ""
+
+  /**
+   * This method is called when the layout of the root pane needs to be updated.
+   *
+   * Widget position and size should only be changed within this method.
+   *
+   * @see Widget#setPosition(int, int)
+   * @see Widget#setSize(int, int)
+   * @see Widget#adjustSize()
+   */
+  override def layoutRootPane() {
+    super.layoutRootPane()
+    inventoryPanel.adjustSize()
+    frame.adjustSize()
   }
 }
