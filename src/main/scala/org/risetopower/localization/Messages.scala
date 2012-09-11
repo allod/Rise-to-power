@@ -1,34 +1,60 @@
 package org.risetopower.localization
 
-import scala.collection.immutable.Map
-import java.net.URL
+import java.net.URI
 import org.risetopower.util.Logging
+import io.Source
 
 object Messages extends Logging{
 
-  lazy val messages: Map[String, String] = readMessages()
+  lazy val messages: Map[String, Map[String, String]] = initMessages()
 
-  private val DEFAULT_MESSAGES = "messages"
-  private val MESSAGE_SEPARATOR = "="
-  private val PARAM_HOLDER = "%s"
+  private val MessageSeparator = "="
+  private val ParamHolder = "%s"
+
+  //TODO move to Configuration
+  private val filenamePattern = "messages"
+  val defaultLanguage = "en"
+  private val supportedLanguages = List("en", "uk", "ru")
 
 
-  def get(key: String, params: Any*) = messages.get(key) match {
-    case Some(message) => params.foldLeft(message) { (m, p) => m.replaceFirst(PARAM_HOLDER, p.toString) }
+  //TODO make lang implicit
+  def get(key: String, params: Any*)(lang: String): String = {
+    messages.get(lang) match {
+      case Some(messageMap) => getMessage(messageMap, key, params:_*)
+      case None => get(key, params)(defaultLanguage)
+    }
+  }
+
+  private def getMessage(messageMap: Map[String, String], key: String, params: Any*)= messageMap.get(key) match {
+    case Some(message) => params.foldLeft(message) { (msg, p) => msg.replaceFirst(ParamHolder, p.toString)}
     case None => key
   }
 
-
-  private def readMessages(): Map[String, String] = {
-    logger.debug("loading messages from: " + DEFAULT_MESSAGES)
-
-    val name: URL = getClass.getClassLoader.getResource(DEFAULT_MESSAGES)
-    val lines = scala.io.Source.fromFile(name.toURI).getLines()
-
-    def parseKey(line: String): String = line.take(line.indexOf(MESSAGE_SEPARATOR))
-    def parseMessage(line: String): String = line.drop(line.indexOf(MESSAGE_SEPARATOR) + MESSAGE_SEPARATOR.size)
-
-    lines.map(line => (parseKey(line), parseMessage(line))).toMap
+  private def initMessages(): Map[String, Map[String, String]] = {
+    logger.debug("loading messages for following languages: " + supportedLanguages.mkString(","))
+    val messageMaps = supportedLanguages map {lang => Map(lang -> parseMessages(lang))}
+    messageMaps.foldLeft(Map.empty[String, Map[String, String]]) { _ ++ _ }
   }
 
+
+  private def parseMessages(language: String): Map[String, String] = {
+    val fileName = if (language == defaultLanguage) filenamePattern else filenamePattern + "." + language
+    val resource = Option(getClass.getClassLoader.getResource(fileName))
+
+    resource match {
+      case Some(resourceUrl) => parseLines(resourceUrl.toURI)
+      case None => Map.empty[String, String]
+    }
+  }
+
+  private def parseLines(resourceUri: URI) = {
+    implicit def parseLine(line: String) = new {
+      def separatorIndex = line.indexOf(MessageSeparator)
+      def key = line.take(separatorIndex)
+      def message = line.drop(separatorIndex + MessageSeparator.size)
+    }
+
+    val lines = Source.fromFile(resourceUri).getLines()
+    lines.map(line => (line.key, line.message)).toMap
+  }
 }
