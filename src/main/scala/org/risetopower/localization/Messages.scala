@@ -4,7 +4,7 @@ import java.net.URI
 import org.risetopower.util.Logging
 import io.Source
 
-object Messages extends Logging{
+object Messages extends Logging {
 
   lazy val messages: Map[String, Map[String, String]] = initMessages()
 
@@ -12,16 +12,16 @@ object Messages extends Logging{
   private val ParamHolder = "%s"
 
   //TODO move to Configuration
+  private val defaultLanguage = "en"
+  private val currentLanguage = "en"
   private val filenamePattern = "messages"
-  val defaultLanguage = "en"
   private val supportedLanguages = List("en", "uk", "ru")
 
 
-  //TODO make lang implicit
-  def get(key: String, params: Any*)(lang: String): String = {
+  def get(key: String, params: Any*)(implicit lang: String = currentLanguage): String = {
     messages.get(lang) match {
       case Some(messageMap) => getMessage(messageMap, key, params:_*)
-      case None => get(key, params)(defaultLanguage)
+      case None => get(key, params:_*)(defaultLanguage)
     }
   }
 
