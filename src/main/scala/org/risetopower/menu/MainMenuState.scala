@@ -3,18 +3,35 @@ package org.risetopower.menu
 import org.newdawn.slick.state.StateBasedGame
 import org.newdawn.slick.GameContainer
 import org.newdawn.slick.Graphics
-import de.matthiasmann.twl._
-import org.risetopower.twl.BasicTWLGameState
+import org.risetopower.twl.{TWLFactory, BasicTWLGameState}
 import org.risetopower.game.RiseToPowerStateConstants
+import de.matthiasmann.twl.ColumnLayout
+import org.risetopower.twl.layout.TableLayout
+import org.risetopower.util.Logging
 
-class MainMenuState extends BasicTWLGameState {
+class MainMenuState extends BasicTWLGameState with Logging {
   override def getID = RiseToPowerStateConstants.MAIN_MENU_ID
 
-  val button = new Button("Epic button")
-
   override def init(gameContainer: GameContainer, stateBasedGame: StateBasedGame) {
-    createButton()
-    layout()
+    logger.info("Initializing main menu")
+
+    val newGameButton = TWLFactory.createDefaultButton("New game")
+    val loadGameButton = TWLFactory.createDefaultButton("Load game")
+    val optionsButton = TWLFactory.createDefaultButton("Options")
+    val exitButton = TWLFactory.createDefaultButton("Exit")
+    exitButton.addCallback(() => {
+      logger.info("Game exit")
+      gameContainer.exit()
+    })
+
+    val layout = new TableLayout(4, 1, 1, 4)
+
+    layout.add(newGameButton)
+    layout.add(loadGameButton)
+    layout.add(optionsButton)
+    layout.add(exitButton)
+
+    rootPane.add(layout)
   }
 
   override def update(gameContainer: GameContainer, stateBasedGame: StateBasedGame, i: Int) {
@@ -24,17 +41,6 @@ class MainMenuState extends BasicTWLGameState {
   override def render(gameContainer: GameContainer, stateBasedGame: StateBasedGame, graphics: Graphics) {
   }
 
-  override def themeName : String = "lesson1"
-
-  def createButton() {
-    button.setTheme("button");
-    rootPane.add(button);
-  }
-
-  def layout(){
-    button.setPosition(100, 100);
-    button.setSize(100, 33);
-    //button.adjustSize();
-  }
+  override def themeName : String = "panel"
 
 }

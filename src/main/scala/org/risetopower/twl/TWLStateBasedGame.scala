@@ -50,7 +50,7 @@ import java.net.URL
 abstract class TWLStateBasedGame(name:String) extends StateBasedGame(name) {
 
   val emptyRootWidget:Widget = new Widget()
-  emptyRootWidget.setTheme("lesson1")
+  emptyRootWidget.setTheme("")
   var gui:GUI = _
   var guiInitialized:Boolean = false
 
