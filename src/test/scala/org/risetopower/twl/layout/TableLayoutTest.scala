@@ -1,4 +1,4 @@
-package org.risetopower
+package org.risetopower.twl.layout
 
 import org.scalatest.FunSuite
 import twl.layout.TableLayout
@@ -6,11 +6,11 @@ import de.matthiasmann.twl.Button
 
 class TableLayoutTest extends FunSuite {
   test("table layout component placement") {
-    val layout = new TableLayout(2,3,0.5, 1)
+    val layout = new TableLayout(2, 3, 0.5, 1)
     val widgets = List(new Button, new Button, new Button,
       new Button, new Button, new Button)
 
-    widgets foreach(layout.add(_))
+    widgets foreach (layout.add(_))
     layout.setSize(180, 900)
     layout.layoutChildren()
 
@@ -28,10 +28,10 @@ class TableLayoutTest extends FunSuite {
     val heightGap = 75
 
     widgets foreach (w => {
-        assert(w.getWidth === width)
-        assert(w.getHeight === height)
-      }
-    )
+      assert(w.getWidth === width)
+      assert(w.getHeight === height)
+    }
+      )
 
     assert(widgets(0).getX === widthGap)
     assert(widgets(0).getY === heightGap)
