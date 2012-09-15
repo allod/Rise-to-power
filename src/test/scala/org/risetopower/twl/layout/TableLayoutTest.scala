@@ -1,7 +1,6 @@
 package org.risetopower.twl.layout
 
 import org.scalatest.FunSuite
-import twl.layout.TableLayout
 import de.matthiasmann.twl.Button
 
 class TableLayoutTest extends FunSuite {
@@ -30,8 +29,8 @@ class TableLayoutTest extends FunSuite {
     widgets foreach (w => {
       assert(w.getWidth === width)
       assert(w.getHeight === height)
-    }
-      )
+      }
+    )
 
     assert(widgets(0).getX === widthGap)
     assert(widgets(0).getY === heightGap)
