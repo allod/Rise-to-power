@@ -1,4 +1,4 @@
-package org.risetopower.main
+package org.risetopower
 
 import org.newdawn.slick.AppGameContainer
 import collection.immutable.Stream.cons

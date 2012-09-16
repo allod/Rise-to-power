@@ -6,7 +6,7 @@ import org.newdawn.slick.Graphics
 import org.risetopower.twl.{TWLFactory, BasicTWLGameState}
 import org.risetopower.game.RiseToPowerStateConstants
 import de.matthiasmann.twl.ColumnLayout
-import org.risetopower.twl.layout.TableLayout
+import org.risetopower.twl.layout.{BorderLayout, TableLayout}
 import org.risetopower.util.Logging
 
 class MainMenuState extends BasicTWLGameState with Logging {
@@ -19,19 +19,26 @@ class MainMenuState extends BasicTWLGameState with Logging {
     val loadGameButton = TWLFactory.createDefaultButton("Load game")
     val optionsButton = TWLFactory.createDefaultButton("Options")
     val exitButton = TWLFactory.createDefaultButton("Exit")
+
     exitButton.addCallback(() => {
       logger.info("Game exit")
       gameContainer.exit()
     })
 
-    val layout = new TableLayout(4, 1, 1, 4)
+    val borderLayout = new BorderLayout(0.5, 0.3, 0, 0.3)
+
+    val layout = new TableLayout(4, 1, 1, 0.5) {
+       setTheme("panel")
+    }
 
     layout.add(newGameButton)
     layout.add(loadGameButton)
     layout.add(optionsButton)
     layout.add(exitButton)
 
-    rootPane.add(layout)
+    borderLayout.add(layout)
+
+    rootPane.add(borderLayout)
   }
 
   override def update(gameContainer: GameContainer, stateBasedGame: StateBasedGame, i: Int) {
@@ -41,6 +48,6 @@ class MainMenuState extends BasicTWLGameState with Logging {
   override def render(gameContainer: GameContainer, stateBasedGame: StateBasedGame, graphics: Graphics) {
   }
 
-  override def themeName : String = "panel"
+  override def themeName : String = "backgroundPanel"
 
 }

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE themes PUBLIC "-//www.matthiasmann.de//TWL-Theme//EN" "http://hg.l33tlabs.org/twl/raw-file/tip/src/de/matthiasmann/twl/theme/theme.dtd">
 <themes>
+    <images file="landscape-castle.png">
+        <area name="backgroundImage" xywh="0,0,1300,970"/>
+    </images>
     <images file="gui.png">
         <cursor name="cursor_text" hotSpotX="3" hotSpotY="2" xywh="56,0,7,18"/>
         <cursor name="cursor_pointer" hotSpotX="1" hotSpotY="1" xywh="98,0,11,18"/>
@@ -287,7 +290,7 @@
     </theme>
     <theme name="panel" ref="dialoglayout">
         <param name="background"><image>panel_background</image></param>
-        <param name="border"><border>10</border></param>
+        <param name="border"><border>0</border></param>
     </theme>
     <theme name="previewwidgets" ref="panel">
         <theme name="label" ref="label">
@@ -318,5 +321,8 @@
             <map>
             </map>
         </param>
+    </theme>
+    <theme name="backgroundPanel" ref="-defaults">
+       <param name="background"><image>backgroundImage</image></param>
     </theme>
 </themes>
