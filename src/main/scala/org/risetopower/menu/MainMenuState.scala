@@ -9,7 +9,7 @@ import de.matthiasmann.twl.ColumnLayout
 import org.risetopower.twl.layout.{BorderLayout, TableLayout}
 import org.risetopower.util.Logging
 
-class MainMenuState extends BasicTWLGameState with Logging {
+class MainMenuState extends AbstractMenuGameState {
   override def getID = RiseToPowerStateConstants.MAIN_MENU_ID
 
   override def init(gameContainer: GameContainer, stateBasedGame: StateBasedGame) {
@@ -25,7 +25,10 @@ class MainMenuState extends BasicTWLGameState with Logging {
       gameContainer.exit()
     })
 
-    val borderLayout = new BorderLayout(0.5, 0.3, 0, 0.3)
+    optionsButton.addCallback(() => {
+      logger.info("Go to option menu")
+      stateBasedGame.enterState(RiseToPowerStateConstants.OPTIONS_MENU_ID)
+    })
 
     val layout = new TableLayout(4, 1, 1, 0.5) {
        setTheme("panel")
@@ -36,18 +39,9 @@ class MainMenuState extends BasicTWLGameState with Logging {
     layout.add(optionsButton)
     layout.add(exitButton)
 
-    borderLayout.add(layout)
+    panelLayout.add(layout)
 
-    rootPane.add(borderLayout)
   }
 
-  override def update(gameContainer: GameContainer, stateBasedGame: StateBasedGame, i: Int) {
-    rootPane.getGUI.update()
-  }
-
-  override def render(gameContainer: GameContainer, stateBasedGame: StateBasedGame, graphics: Graphics) {
-  }
-
-  override def themeName : String = "backgroundPanel"
 
 }
