@@ -15,10 +15,10 @@ class MainMenuState extends AbstractMenuGameState {
   override def init(gameContainer: GameContainer, stateBasedGame: StateBasedGame) {
     logger.info("Initializing main menu")
 
-    val newGameButton = TWLFactory.createDefaultButton("New game")
-    val loadGameButton = TWLFactory.createDefaultButton("Load game")
-    val optionsButton = TWLFactory.createDefaultButton("Options")
-    val exitButton = TWLFactory.createDefaultButton("Exit")
+    val newGameButton = TWLFactory.createDefaultButton("menu.newGame")
+    val loadGameButton = TWLFactory.createDefaultButton("menu.loadGame")
+    val optionsButton = TWLFactory.createDefaultButton("menu.options")
+    val exitButton = TWLFactory.createDefaultButton("menu.exit")
 
     exitButton.addCallback(() => {
       logger.info("Game exit")

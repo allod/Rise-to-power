@@ -12,10 +12,10 @@ class OptionsMenuState extends AbstractMenuGameState {
   override def init(gameContainer: GameContainer, stateBasedGame: StateBasedGame) {
     logger.info("Initializing options menu")
 
-    val gameOptionsButton = TWLFactory.createDefaultButton("Game options")
-    val graphicsOptionsButton = TWLFactory.createDefaultButton("Graphics options")
-    val soundOptionsButton = TWLFactory.createDefaultButton("Sound options")
-    val backButton = TWLFactory.createDefaultButton("Back")
+    val gameOptionsButton = TWLFactory.createDefaultButton("menu.gameOptions")
+    val graphicsOptionsButton = TWLFactory.createDefaultButton("menu.graphicOptions")
+    val soundOptionsButton = TWLFactory.createDefaultButton("menu.soundOptions")
+    val backButton = TWLFactory.createDefaultButton("menu.back")
 
     backButton.addCallback(() => {
       logger.info("Back to main menu")

@@ -33,7 +33,10 @@ object Messages extends Logging {
   private def initMessages(): Map[String, Map[String, String]] = {
     logger.debug("loading messages for following languages: " + supportedLanguages.mkString(","))
     val messageMaps = supportedLanguages map {lang => Map(lang -> parseMessages(lang))}
-    messageMaps.foldLeft(Map.empty[String, Map[String, String]]) { _ ++ _ }
+
+    val res = messageMaps.foldLeft(Map.empty[String, Map[String, String]]) { _ ++ _ }
+    res foreach ((pair) => logger.info("For language {} found {} messages", pair._1, pair._2.size))
+    res
   }
 
 

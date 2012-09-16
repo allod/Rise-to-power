@@ -1,10 +1,12 @@
 package org.risetopower.twl
 
 import de.matthiasmann.twl.Button
+import org.risetopower.localization.Messages
 
 object TWLFactory {
-  def createDefaultButton(text:String) : Button = {
-     val button = new Button(text)
+
+  def createDefaultButton(key:String) : Button = {
+     val button = new Button(Messages.get(key))
      button.setTheme("button")
      button
   }
