@@ -1,6 +1,6 @@
 package org.risetopower.menu
 
-import org.risetopower.twl.{TWLFactory, BasicTWLGameState}
+import org.risetopower.twl.TWLFactory
 import org.risetopower.game.RiseToPowerStateConstants
 import org.newdawn.slick.GameContainer
 import org.newdawn.slick.state.StateBasedGame
@@ -17,20 +17,20 @@ class OptionsMenuState extends AbstractMenuGameState {
     val soundOptionsButton = TWLFactory.createDefaultButton("menu.soundOptions")
     val backButton = TWLFactory.createDefaultButton("menu.back")
 
-    backButton.addCallback(() => {
+    backButton.callback += {
       logger.info("Back to main menu")
       stateBasedGame.enterState(RiseToPowerStateConstants.MAIN_MENU_ID)
-    })
+    }
 
     val layout = new TableLayout(4, 1, 1, 0.5) {
       setTheme("panel")
     }
 
-    layout.add(gameOptionsButton)
-    layout.add(graphicsOptionsButton)
-    layout.add(soundOptionsButton)
-    layout.add(backButton)
+    layout += gameOptionsButton
+    layout += graphicsOptionsButton
+    layout += soundOptionsButton
+    layout += backButton
 
-    panelLayout.add(layout)
+    panelLayout += layout
   }
 }

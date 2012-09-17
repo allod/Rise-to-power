@@ -35,6 +35,7 @@ import de.matthiasmann.twl.Event
 import de.matthiasmann.twl.Widget
 import org.risetopower.util.Logging
 import de.matthiasmann.twl.Event.Type
+import wrappers.WidgetWrapper
 
 /**
  * RootPane for all game states.
@@ -42,11 +43,11 @@ import de.matthiasmann.twl.Event.Type
  *
  * @author Matthias Mann
  */
-class RootPane(val state:BasicTWLGameState) extends DesktopArea with Logging {
+class RootPane(val state:BasicTWLGameState) extends DesktopArea with WidgetWrapper with Logging {
   setCanAcceptKeyboardFocus(true)
 
-  var oldMouseX:Int = 0
-  var oldMouseY:Int = 0
+  var oldMouseX = 0
+  var oldMouseY = 0
 
   /**
    * When subclassing this class it's strongly suggested to provide

@@ -49,7 +49,6 @@ import org.newdawn.slick.state.StateBasedGame
 abstract class BasicTWLGameState extends BasicGameState {
   private var rootPaneField:RootPane = _
 
-  implicit def funToRunnable(fun: () => Unit) = new Runnable() { def run() = fun() }
   /**
    * Returns the root pane for this game state.
    * Calls {@link #createRootPane()} if it has not yet been created.

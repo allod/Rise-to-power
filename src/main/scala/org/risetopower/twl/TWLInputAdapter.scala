@@ -49,9 +49,9 @@ import org.newdawn.slick.util.InputAdapter
  */
 class TWLInputAdapter(var gui: GUI, var input: Input) extends InputAdapter {
 
-  var mouseDown: Int = 0
-  var ignoreMouse: Boolean = false
-  var lastPressConsumed: Boolean = false
+  var mouseDown = 0
+  var ignoreMouse = false
+  var lastPressConsumed = false
 
   override def mouseWheelMoved(change: Int) {
     if (!ignoreMouse) {

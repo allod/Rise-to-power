@@ -2,12 +2,9 @@ package org.risetopower.menu
 
 import org.newdawn.slick.state.StateBasedGame
 import org.newdawn.slick.GameContainer
-import org.newdawn.slick.Graphics
-import org.risetopower.twl.{TWLFactory, BasicTWLGameState}
+import org.risetopower.twl.TWLFactory
 import org.risetopower.game.RiseToPowerStateConstants
-import de.matthiasmann.twl.ColumnLayout
-import org.risetopower.twl.layout.{BorderLayout, TableLayout}
-import org.risetopower.util.Logging
+import org.risetopower.twl.layout.TableLayout
 
 class MainMenuState extends AbstractMenuGameState {
   override def getID = RiseToPowerStateConstants.MAIN_MENU_ID
@@ -20,26 +17,26 @@ class MainMenuState extends AbstractMenuGameState {
     val optionsButton = TWLFactory.createDefaultButton("menu.options")
     val exitButton = TWLFactory.createDefaultButton("menu.exit")
 
-    exitButton.addCallback(() => {
+    exitButton.callback += {
       logger.info("Game exit")
       gameContainer.exit()
-    })
+    }
 
-    optionsButton.addCallback(() => {
+    optionsButton.callback += {
       logger.info("Go to option menu")
       stateBasedGame.enterState(RiseToPowerStateConstants.OPTIONS_MENU_ID)
-    })
+    }
 
     val layout = new TableLayout(4, 1, 1, 0.5) {
        setTheme("panel")
     }
 
-    layout.add(newGameButton)
-    layout.add(loadGameButton)
-    layout.add(optionsButton)
-    layout.add(exitButton)
+    layout += newGameButton
+    layout += loadGameButton
+    layout += optionsButton
+    layout += exitButton
 
-    panelLayout.add(layout)
+    panelLayout += layout
 
   }
 

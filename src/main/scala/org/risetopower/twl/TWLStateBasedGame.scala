@@ -49,10 +49,11 @@ import java.net.URL
  */
 abstract class TWLStateBasedGame(name:String) extends StateBasedGame(name) {
 
-  val emptyRootWidget:Widget = new Widget()
-  emptyRootWidget.setTheme("")
+  val emptyRootWidget = new Widget() {
+    setTheme("")
+  }
   var gui:GUI = _
-  var guiInitialized:Boolean = false
+  var guiInitialized = false
 
   /**
    * Adds a new game state
