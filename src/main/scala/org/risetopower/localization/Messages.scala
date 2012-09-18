@@ -14,7 +14,7 @@ object Messages extends Logging {
   //TODO move to Configuration
   private val defaultLanguage = "en"
   private val currentLanguage = "en"
-  private val filenamePattern = "messages"
+  private val filenamePattern = "localization/messages"
   private val supportedLanguages = List("en", "uk", "ru")
 
 
@@ -45,8 +45,14 @@ object Messages extends Logging {
     val resource = Option(getClass.getClassLoader.getResource(fileName))
 
     resource match {
-      case Some(resourceUrl) => parseLines(resourceUrl.toURI)
-      case None => Map.empty[String, String]
+      case Some(resourceUrl) => {
+        logger.info("File {} for language {} found, parsing file", fileName, language)
+        parseLines(resourceUrl.toURI)
+      }
+      case None => {
+        logger.warn("{} for language {} not found, using empty map", fileName, language)
+        Map.empty[String, String]
+      }
     }
   }
 
