@@ -15,28 +15,31 @@ object Messages extends Logging {
   private val defaultLanguage = "en"
   private val currentLanguage = "en"
   private val filenamePattern = "localization/messages"
-  private val supportedLanguages = List("en", "uk", "ru")
+  private val languages = List("en", "uk", "ru")
 
 
-  def get(key: String, params: Any*)(implicit lang: String = currentLanguage): String = {
-    messages.get(lang) match {
-      case Some(messageMap) => getMessage(messageMap, key, params:_*)
-      case None => get(key, params:_*)(defaultLanguage)
-    }
+  def get(key: String, params: Any*)(implicit lang: String = currentLanguage): String = messages.get(lang) match {
+    case Some(messageMap) => getMessage(messageMap, key, params:_*)
+    case None => get(key, params:_*)(defaultLanguage)
   }
 
-  private def getMessage(messageMap: Map[String, String], key: String, params: Any*)= messageMap.get(key) match {
-    case Some(message) => params.foldLeft(message) { (msg, p) => msg.replaceFirst(ParamHolder, p.toString)}
+  private def getMessage(messageMap: Map[String, String], key: String, params: Any*) = messageMap.get(key) match {
+    case Some(message) => putParamsInMessage(message, params:_*)
     case None => key
   }
 
-  private def initMessages(): Map[String, Map[String, String]] = {
-    logger.debug("loading messages for following languages: " + supportedLanguages.mkString(","))
-    val messageMaps = supportedLanguages map {lang => Map(lang -> parseMessages(lang))}
+  private def putParamsInMessage(message: String, params: Any*) =
+    params.foldLeft(message) {(msg, p) => msg.replaceFirst(ParamHolder, p.toString)}
 
-    val res = messageMaps.foldLeft(Map.empty[String, Map[String, String]]) { _ ++ _ }
-    res foreach ((pair) => logger.info("For language {} found {} messages", pair._1, pair._2.size))
-    res
+  private def initMessages(): Map[String, Map[String, String]] = {
+    logger.debug("loading messages for following languages: " + languages.mkString(","))
+
+    val loadedMessages = languages.foldLeft(Map.empty[String, Map[String, String]]) {
+      (map, lang) => map + (lang -> parseMessages(lang))
+    }
+
+    loadedMessages foreach {case (lang, map) => logger.info("For language {} found {} messages", lang, map.size)}
+    loadedMessages
   }
 
 

@@ -1,6 +1,5 @@
 package org.risetopower.twl.layout
 
-import de.matthiasmann.twl.Widget
 
 /**
  *
@@ -15,29 +14,27 @@ import de.matthiasmann.twl.Widget
 class TableLayout(rows:Int, cols:Int, rowGap:Double, colGap:Double) extends Layout {
 
   override def layoutChildren() {
-     val width = getWidth.toDouble
-     val height = getHeight.toDouble
-     val childWidthWithoutGap = (width / cols).toInt
-     val childHeightWithoutGap = (height / rows).toInt
+    val width = getWidth.toDouble
+    val height = getHeight.toDouble
+    val childWidthWithoutGap = (width / cols).toInt
+    val childHeightWithoutGap = (height / rows).toInt
 
-     var i = 0
-     for (row <- 0 until rows) {
-       for (col <- 0 until cols) {
-         val xWithoutGap = (col * width / cols).round.toInt
-         val yWithoutGap = (row * height / rows).round.toInt
+    var i = 0
+    for (row <- 0 until rows; col <- 0 until cols) {
+      val xWithoutGap = (col * width / cols).round.toInt
+      val yWithoutGap = (row * height / rows).round.toInt
 
-         val childWidthWithGap = (childWidthWithoutGap / (1 + colGap)).round.toInt
-         val childHeightWithGap = (childHeightWithoutGap / (1 + rowGap)).round.toInt
+      val childWidthWithGap = (childWidthWithoutGap / (1 + colGap)).round.toInt
+      val childHeightWithGap = (childHeightWithoutGap / (1 + rowGap)).round.toInt
 
-         val x = xWithoutGap + (childWidthWithoutGap - childWidthWithGap) / 2
-         val y = yWithoutGap + (childHeightWithoutGap - childHeightWithGap) / 2
+      val x = xWithoutGap + (childWidthWithoutGap - childWidthWithGap) / 2
+      val y = yWithoutGap + (childHeightWithoutGap - childHeightWithGap) / 2
 
-         children(i).setPosition(x, y)
+      children(i).setPosition(x, y)
 
-         children(i).setSize(childWidthWithGap, childHeightWithGap)
-         i+=1
-       }
-     }
+      children(i).setSize(childWidthWithGap, childHeightWithGap)
+      i+=1
+    }
   }
 
   override def checkChildrenCount() {

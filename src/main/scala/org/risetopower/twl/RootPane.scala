@@ -35,6 +35,10 @@ import de.matthiasmann.twl.Event
 import de.matthiasmann.twl.Widget
 import org.risetopower.util.Logging
 import de.matthiasmann.twl.Event.Type
+import wrappers.WidgetWrapper
+import org.newdawn.slick.{Graphics, GameContainer}
+import org.newdawn.slick.state.StateBasedGame
+import org.risetopower.game.RiseToPowerStateConstants
 
 /**
  * RootPane for all game states.
@@ -42,56 +46,63 @@ import de.matthiasmann.twl.Event.Type
  *
  * @author Matthias Mann
  */
-class RootPane(val state:BasicTWLGameState) extends DesktopArea with Logging {
+class RootPane(val state: BasicTWLGameState) extends DesktopArea with WidgetWrapper with Logging {
+
   setCanAcceptKeyboardFocus(true)
 
-  var oldMouseX:Int = 0
-  var oldMouseY:Int = 0
+  var oldMouseX = 0
+  var oldMouseY = 0
 
   /**
    * When subclassing this class it's strongly suggested to provide
    * a default constructor to allow previewing in the Theme Editor.
    */
   def this() {
-    this(null)
+    this(new BasicTWLGameState {
+      def getID = RiseToPowerStateConstants.DUMMY_STATE_ID
+
+      def init(p1: GameContainer, p2: StateBasedGame) {}
+
+      def render(p1: GameContainer, p2: StateBasedGame, p3: Graphics) {}
+
+      def update(p1: GameContainer, p2: StateBasedGame, p3: Int) {}
+
+      def themeName = ""
+    })
   }
 
   /**
    * Returns true when the root pane is in preview mode (Theme Editor).
    * @return true when the root pane is in preview mode (Theme Editor).
    */
-  def previewMode() = state == null
+  def previewMode() = state.getID == RiseToPowerStateConstants.DUMMY_STATE_ID
 
   override def keyboardFocusLost() {
-    if(state != null) {
-      state.keyboardFocusLost()
-    }
+    state.keyboardFocusLost()
   }
 
-  override def requestKeyboardFocus(child:Widget):Boolean = {
-    if (child != null && state != null) {
+  override def requestKeyboardFocus(child: Widget): Boolean = {
+    if (child != null) {
       state.keyboardFocusLost()
     }
 
     super.requestKeyboardFocus(child)
   }
 
-  override def handleEvent(evt:Event ):Boolean = {
+  override def handleEvent(evt: Event): Boolean = {
     if (super.handleEvent(evt)) {
-      true
+      return true
     }
 
-    if(state != null) {
-      evt.getType match {
-        case Type.KEY_PRESSED => state.keyPressed(evt.getKeyCode, evt.getKeyChar)
-        case Type.KEY_RELEASED => state.keyReleased(evt.getKeyCode, evt.getKeyChar)
-        case Type.MOUSE_BTNDOWN => state.mousePressed(evt.getMouseButton, evt.getMouseX, evt.getMouseY)
-        case Type.MOUSE_BTNUP => state.mouseReleased(evt.getMouseButton, evt.getMouseX, evt.getMouseY)
-        case Type.MOUSE_CLICKED => state.mouseClicked(evt.getMouseButton, evt.getMouseX, evt.getMouseY, evt.getMouseClickCount)
-        case Type.MOUSE_ENTERED | Type.MOUSE_MOVED => state.mouseMoved(oldMouseX, oldMouseY, evt.getMouseX, evt.getMouseY)
-        case Type.MOUSE_DRAGGED => state.mouseDragged(oldMouseX, oldMouseY, evt.getMouseX, evt.getMouseY)
-        case Type.MOUSE_WHEEL => state.mouseWheelMoved(evt.getMouseWheelDelta)
-      }
+    evt.getType match {
+      case Type.KEY_PRESSED => state.keyPressed(evt.getKeyCode, evt.getKeyChar)
+      case Type.KEY_RELEASED => state.keyReleased(evt.getKeyCode, evt.getKeyChar)
+      case Type.MOUSE_BTNDOWN => state.mousePressed(evt.getMouseButton, evt.getMouseX, evt.getMouseY)
+      case Type.MOUSE_BTNUP => state.mouseReleased(evt.getMouseButton, evt.getMouseX, evt.getMouseY)
+      case Type.MOUSE_CLICKED => state.mouseClicked(evt.getMouseButton, evt.getMouseX, evt.getMouseY, evt.getMouseClickCount)
+      case Type.MOUSE_ENTERED | Type.MOUSE_MOVED => state.mouseMoved(oldMouseX, oldMouseY, evt.getMouseX, evt.getMouseY)
+      case Type.MOUSE_DRAGGED => state.mouseDragged(oldMouseX, oldMouseY, evt.getMouseX, evt.getMouseY)
+      case Type.MOUSE_WHEEL => state.mouseWheelMoved(evt.getMouseWheelDelta)
     }
 
     if (evt.isMouseEvent) {

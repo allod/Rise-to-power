@@ -8,7 +8,7 @@ import org.risetopower.twl.layout.BorderLayout
 
 abstract class AbstractMenuGameState extends BasicTWLGameState with Logging {
   val panelLayout = new BorderLayout(0.5, 0.3, 0, 0.3)
-  rootPane.add(panelLayout)
+  rootPane += panelLayout
 
   override def update(gameContainer: GameContainer, stateBasedGame: StateBasedGame, i: Int) {
     rootPane.getGUI.update()
@@ -18,7 +18,7 @@ abstract class AbstractMenuGameState extends BasicTWLGameState with Logging {
     // do nothing here
   }
 
-  override def themeName : String = "backgroundPanel"
+  override def themeName = "backgroundPanel"
 
 
 

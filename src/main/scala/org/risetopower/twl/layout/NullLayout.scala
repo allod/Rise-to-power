@@ -1,6 +1,5 @@
 package org.risetopower.twl.layout
 
-import de.matthiasmann.twl.Widget
 
 /**
  *
