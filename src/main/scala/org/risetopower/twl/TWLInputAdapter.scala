@@ -54,10 +54,8 @@ class TWLInputAdapter(var gui: GUI, var input: Input) extends InputAdapter {
   var lastPressConsumed = false
 
   override def mouseWheelMoved(change: Int) {
-    if (!ignoreMouse) {
-      if (gui.handleMouseWheel(change)) {
-        consume()
-      }
+    if (!ignoreMouse && gui.handleMouseWheel(change)) {
+      consume()
     }
   }
 
@@ -69,11 +67,9 @@ class TWLInputAdapter(var gui: GUI, var input: Input) extends InputAdapter {
 
     mouseDown |= 1 << button
 
-    if (!ignoreMouse) {
-      if (gui.handleMouse(x, y, button, true)) {
-        consume()
-        lastPressConsumed = true
-      }
+    if (!ignoreMouse && gui.handleMouse(x, y, button, true)) {
+      consume()
+      lastPressConsumed = true
     }
   }
 
@@ -93,10 +89,8 @@ class TWLInputAdapter(var gui: GUI, var input: Input) extends InputAdapter {
     if (mouseDown != 0 && !lastPressConsumed) {
       ignoreMouse = true
       gui.clearMouseState()
-    } else if (!ignoreMouse) {
-      if (gui.handleMouse(newX, newY, -1, false)) {
-        consume()
-      }
+    } else if (!ignoreMouse && gui.handleMouse(newX, newY, -1, false)) {
+      consume()
     }
   }
 

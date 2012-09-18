@@ -1,4 +1,5 @@
 package org.risetopower.twl
+
 /*
  * Copyright (c) 2008-2010, Matthias Mann
  *
@@ -42,26 +43,46 @@ import org.newdawn.slick.state.GameState
 import org.newdawn.slick.state.StateBasedGame
 import org.newdawn.slick.state.transition.Transition
 import java.net.URL
+
 /**
  * A StateBaseGame subclass with support for a TWL Ui per state.
  *
  * @author Matthias Mann
  */
-abstract class TWLStateBasedGame(name:String) extends StateBasedGame(name) {
+abstract class TWLStateBasedGame(name: String) extends StateBasedGame(name) {
 
   val emptyRootWidget = new Widget() {
     setTheme("")
   }
-  var gui:GUI = _
-  var guiInitialized = false
+
+  lazy val gui: GUI = {
+    GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS)
+    try {
+      val renderer = new LWJGLRenderer()
+      val initializedGui = new GUI(emptyRootWidget, renderer, null)
+      initializedGui.applyTheme(loadTheme(renderer))
+
+      val input = getContainer.getInput
+      input.addPrimaryListener(new TWLInputAdapter(initializedGui, input))
+      initializedGui
+    } catch {
+      case e: Throwable => throw new SlickException("Could not initialize TWL GUI", e)
+    } finally {
+      GL11.glPopAttrib()
+    }
+  }
 
   /**
-   * Adds a new game state
-   * @param state the game state
-   * @see StateBasedGame#addState(org.newdawn.slick.state.GameState)
+   * Implement this method and return the URL for the TWL theme.
+   *
+   * @return the URL for the TWL theme. Must not be null.
    */
-  def addState(state:BasicTWLGameState) {
-    super.addState(state)
+  def themeURL: URL
+
+  def rootPane = gui.getRootPane.asInstanceOf[RootPane]
+
+  def rootPane_=(rootPane: RootPane) {
+    gui.setRootPane(rootPane)
   }
 
   /**
@@ -72,19 +93,10 @@ abstract class TWLStateBasedGame(name:String) extends StateBasedGame(name) {
    * @param state the game state. Must be an instance of BasicTWLGameState
    * @see StateBasedGame#addState(org.newdawn.slick.state.GameState)
    */
-  override def addState(state:GameState) {
-    if(!(state.isInstanceOf[BasicTWLGameState])) {
-      throw new IllegalArgumentException("state must be a BasicTWLGameState")
-    }
+  override def addState(state: GameState) {
+    assert(state.isInstanceOf[BasicTWLGameState])
     super.addState(state)
   }
-
-  /**
-   * Implement this method and return the URL for the TWL theme.
-   *
-   * @return the URL for the TWL theme. Must not be null.
-   */
-  def themeURL:URL
 
   /**
    * Transits to a the specified game state.
@@ -95,65 +107,27 @@ abstract class TWLStateBasedGame(name:String) extends StateBasedGame(name) {
    * @param enter The transition to use when entering the new state
    * @see StateBasedGame#enterState(int, org.newdawn.slick.state.transition.Transition, org.newdawn.slick.state.transition.Transition)
    */
-  override def enterState(id:Int, leave:Transition , enter:Transition ) {
-    if(gui != null) {
-      gui.setRootPane(emptyRootWidget)
-    }
+  override def enterState(id: Int, leave: Transition, enter: Transition) {
+    gui.setRootPane(emptyRootWidget)
     super.enterState(id, leave, enter)
   }
 
-  def loadTheme(renderer:Renderer):ThemeManager = {
+  def loadTheme(renderer: Renderer): ThemeManager = {
     assert(themeURL != null)
     ThemeManager.createThemeManager(themeURL, renderer)
   }
 
-  def rootPane = gui.getRootPane.asInstanceOf[RootPane]
-
-  def rootPane_=(rootPane:RootPane) {
-    if(!guiInitialized) {
-      guiInitialized = true
-      initGUI()
-    }
-    if(gui != null) {
-      gui.setRootPane(rootPane)
-    }
+  override def postRenderState(container: GameContainer, g: Graphics) {
+    gui.draw()
   }
 
-  def initGUI() {
-    GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS)
-    try {
-      val renderer = new LWJGLRenderer()
-      val theme = loadTheme(renderer)
-
-      gui = new GUI(emptyRootWidget, renderer, null)
-      gui.applyTheme(theme)
-
-      val input = getContainer.getInput
-      val inputAdapter = new TWLInputAdapter(gui, input)
-      input.addPrimaryListener(inputAdapter)
-    } catch {
-      case e:Throwable =>
-      throw new SlickException("Could not initialize TWL GUI", e)
-    } finally {
-      GL11.glPopAttrib()
-    }
-  }
-
-  override def postRenderState(container:GameContainer, g:Graphics) {
-    if(gui != null) {
-      gui.draw()
-    }
-  }
-
-  override def postUpdateState(container:GameContainer, delta:Int) {
-    if(gui != null) {
-      gui.setSize()
-      gui.handleTooltips()
-      gui.updateTimers()
-      gui.invokeRunables()
-      gui.validateLayout()
-      gui.setCursor()
-    }
+  override def postUpdateState(container: GameContainer, delta: Int) {
+    gui.setSize()
+    gui.handleTooltips()
+    gui.updateTimers()
+    gui.invokeRunables()
+    gui.validateLayout()
+    gui.setCursor()
   }
 }
 
