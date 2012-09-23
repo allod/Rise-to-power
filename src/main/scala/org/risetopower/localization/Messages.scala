@@ -9,7 +9,6 @@ object Messages extends Logging {
   lazy val messages: Map[String, Map[String, String]] = initMessages()
 
   private val MessageSeparator = "="
-  private val ParamHolder = "%s"
 
   //TODO move to Configuration
   private val defaultLanguage = "en"
@@ -27,12 +26,9 @@ object Messages extends Logging {
 
   private def getMessage(messageMap: Map[String, String], key: String, params: Any*) =
     messageMap.get(key) match {
-      case Some(message) => putParamsInMessage(message, params:_*)
+      case Some(message) => message.format(params: _*)
       case None => key
   }
-
-  private def putParamsInMessage(message: String, params: Any*) =
-    params.foldLeft(message) {(msg, p) => msg.replaceFirst(ParamHolder, p.toString)}
 
   private def initMessages(): Map[String, Map[String, String]] = {
     logger.debug("Loading messages for following languages: " + languages.mkString(","))
