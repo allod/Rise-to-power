@@ -2,7 +2,7 @@ package org.risetopower.localization
 
 import java.net.URI
 import org.risetopower.util.Logging
-import io.Source
+import io.{Codec, Source}
 
 object Messages extends Logging {
 
@@ -14,25 +14,28 @@ object Messages extends Logging {
   //TODO move to Configuration
   private val defaultLanguage = "en"
   private val currentLanguage = "en"
+  private val encoding = Codec.UTF8
   private val filenamePattern = "localization/messages"
   private val languages = List("en", "uk", "ru")
 
 
-  def get(key: String, params: Any*)(implicit lang: String = currentLanguage): String = messages.get(lang) match {
-    case Some(messageMap) => getMessage(messageMap, key, params:_*)
-    case None => get(key, params:_*)(defaultLanguage)
+  def get(key: String, params: Any*)(implicit lang: String = currentLanguage): String =
+    messages.get(lang) match {
+      case Some(messageMap) => getMessage(messageMap, key, params:_*)
+      case None => get(key, params:_*)(defaultLanguage)
   }
 
-  private def getMessage(messageMap: Map[String, String], key: String, params: Any*) = messageMap.get(key) match {
-    case Some(message) => putParamsInMessage(message, params:_*)
-    case None => key
+  private def getMessage(messageMap: Map[String, String], key: String, params: Any*) =
+    messageMap.get(key) match {
+      case Some(message) => putParamsInMessage(message, params:_*)
+      case None => key
   }
 
   private def putParamsInMessage(message: String, params: Any*) =
     params.foldLeft(message) {(msg, p) => msg.replaceFirst(ParamHolder, p.toString)}
 
   private def initMessages(): Map[String, Map[String, String]] = {
-    logger.debug("loading messages for following languages: " + languages.mkString(","))
+    logger.debug("Loading messages for following languages: " + languages.mkString(","))
 
     val loadedMessages = languages.foldLeft(Map.empty[String, Map[String, String]]) {
       (map, lang) => map + (lang -> parseMessages(lang))
@@ -53,7 +56,7 @@ object Messages extends Logging {
         parseLines(resourceUrl.toURI)
       }
       case None => {
-        logger.warn("{} for language {} not found, using empty map", fileName, language)
+        logger.warn("File {} for language {} not found", fileName, language)
         Map.empty[String, String]
       }
     }
@@ -66,7 +69,7 @@ object Messages extends Logging {
       def message = line.drop(separatorIndex + MessageSeparator.size)
     }
 
-    val lines = Source.fromFile(resourceUri).getLines()
+    val lines = Source.fromFile(resourceUri)(encoding).getLines()
     lines.map(line => (line.key, line.message)).toMap
   }
 }
