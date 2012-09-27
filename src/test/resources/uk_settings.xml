@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<settings>
+    <localization>
+        <messageFileEncoding>ISO-8859-1</messageFileEncoding>
+        <defaultLanguage>uk</defaultLanguage>
+        <currentLanguage>uk</currentLanguage>
+        <filenamePattern>custom/messages</filenamePattern>
+        <supportedLanguages><language>uk</language><language>de</language><language>fr</language></supportedLanguages>
+    </localization>
+</settings>

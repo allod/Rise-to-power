@@ -1,28 +1,29 @@
 package org.risetopower.configuration
 
 import xml.XML
-import io.Codec
+import io.{Source, Codec}
 
 object GameSettings {
-  var localizationConfiguration: LocalizationConfiguration = _
+  var localization: LocalizationConfiguration = _
+  private val SettingsFileEncoding = Codec.UTF8.toString
 
   def loadSettings(path: String) {
     val xmlDocument = XML.loadFile(path)
-    localizationConfiguration = LocalizationConfiguration.fromXml(xmlDocument \ "localization")
+    localization = LocalizationConfiguration.fromXml(xmlDocument \ "localization")
   }
 
   def saveSettings(path: String) {
     val xmlDocument =
       <settings>
-        {localizationConfiguration.toXml}
+        {localization.toXml}
       </settings>
 
-    XML.save(path, xmlDocument, localizationConfiguration.fileEncoding.toString, xmlDecl = true)
+    XML.save(path, xmlDocument, SettingsFileEncoding, xmlDecl = true)
   }
 
   def resetToDefaults() {
-    localizationConfiguration = LocalizationConfiguration(
-      fileEncoding = Codec.UTF8,
+    localization = LocalizationConfiguration(
+      messageFileEncoding = Codec.UTF8,
       defaultLanguage = "en",
       currentLanguage = "en",
       filenamePattern = "localization/messages",
