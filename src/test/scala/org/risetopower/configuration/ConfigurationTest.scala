@@ -4,17 +4,18 @@ import org.scalatest.{BeforeAndAfter, FunSuite}
 import java.nio.file.{Paths, Path, Files}
 import io.Codec
 import xml.XML
+import java.io.File
 
 class ConfigurationTest extends FunSuite with BeforeAndAfter {
-  val SettingsToLoadFilePath = "src/test/resources/uk_settings.xml"
-  val SettingsToSaveFilePath = "src/test/resources/settings.xml"
+  val SettingsToLoadUri = getClass.getClassLoader.getResource("settings/uk_settings.xml").toURI
+  val SettingsToSaveUri = getClass.getClassLoader.getResource("settings").getPath + File.separator + "saved_settings.xml"
 
   after {
-    Files.deleteIfExists(Paths.get(SettingsToSaveFilePath))
+    Files.deleteIfExists(Paths.get(SettingsToSaveUri))
   }
 
   test("Loading configuration from file") {
-    Configuration.load(SettingsToLoadFilePath)
+    Configuration.load(Paths.get(SettingsToLoadUri))
 
     assert(Configuration.game === GameConfiguration())
 
@@ -30,7 +31,7 @@ class ConfigurationTest extends FunSuite with BeforeAndAfter {
   }
 
   test("Resetting configuration to default values") {
-    Configuration.load(SettingsToLoadFilePath)
+    Configuration.load(Paths.get(SettingsToLoadUri))
 
     Configuration.resetToDefaults()
 
@@ -62,9 +63,9 @@ class ConfigurationTest extends FunSuite with BeforeAndAfter {
       supportedLanguages = Seq("de", "fr")
     )
 
-    Configuration.save(SettingsToSaveFilePath)
+    Configuration.save(Paths.get(SettingsToSaveUri))
 
-    val savedFile = Paths.get(SettingsToSaveFilePath).toFile
+    val savedFile = Paths.get(SettingsToSaveUri).toFile
     assert(savedFile.exists)
 
     val xml = XML.loadFile(savedFile)

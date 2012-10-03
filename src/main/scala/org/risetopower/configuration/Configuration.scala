@@ -2,6 +2,8 @@ package org.risetopower.configuration
 
 import xml.XML
 import io.{Source, Codec}
+import java.nio.file.{Path, Paths}
+import java.io.File
 
 object Configuration {
   var game: GameConfiguration = _
@@ -10,9 +12,15 @@ object Configuration {
   var localization: LocalizationConfiguration = _
 
   private val SettingsFileEncoding = Codec.UTF8.toString
+  private val SettingsDirectory = "settings"
+  private val SettingsFile = "settings.xml"
 
-  def load(path: String) {
-    val xmlDocument = XML.loadFile(path)
+  private val SettingsUri = getClass.getClassLoader.getResource(SettingsDirectory + File.separator + SettingsFile).toURI
+
+  load()
+
+  def load(path: Path = Paths.get(SettingsUri)) {
+    val xmlDocument = XML.loadFile(path.toFile)
 
     game = GameConfiguration.fromXml(xmlDocument \ "game")
     graphics = GraphicsConfiguration.fromXml(xmlDocument \ "graphics")
@@ -20,7 +28,7 @@ object Configuration {
     localization = LocalizationConfiguration.fromXml(xmlDocument \ "localization")
   }
 
-  def save(path: String) {
+  def save(path: Path) {
     val xmlDocument =
       <settings>
         {game.toXml}
@@ -29,7 +37,7 @@ object Configuration {
         {localization.toXml}
       </settings>
 
-    XML.save(path, xmlDocument, SettingsFileEncoding, xmlDecl = true)
+    XML.save(path.toString, xmlDocument, SettingsFileEncoding, xmlDecl = true)
   }
 
   def resetToDefaults() {

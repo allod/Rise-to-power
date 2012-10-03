@@ -6,7 +6,7 @@ import xml.PrettyPrinter
 
 class SoundConfigurationTest extends FunSuite {
 
-  test("Check creating SoundConfiguration from xml") {
+  test("Creating SoundConfiguration from xml") {
     val expectedConfiguration = SoundConfiguration()
 
     val xmlNodes = <sound></sound>
@@ -15,7 +15,7 @@ class SoundConfigurationTest extends FunSuite {
 
     assert(actualConfiguration === expectedConfiguration)
   }
-  test("Check serialization to xml") {
+  test("Serialization to xml") {
     val expectedXmlNodes = <sound></sound>
 
     val configuration = SoundConfiguration()

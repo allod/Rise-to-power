@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<settings>
+        <game></game>
+        <graphics></graphics>
+        <sound></sound>
+        <localization>
+      <messageFileEncoding>UTF-8</messageFileEncoding>
+      <defaultLanguage>en</defaultLanguage>
+      <currentLanguage>en</currentLanguage>
+      <filenamePattern>localization/messages</filenamePattern>
+      <supportedLanguages><language>en</language><language>uk</language><language>ru</language></supportedLanguages>
+    </localization>
+      </settings>

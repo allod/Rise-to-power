@@ -1,8 +1,13 @@
 package org.risetopower.localization
 
-import org.scalatest.FunSuite
+import org.scalatest.{BeforeAndAfter, FunSuite}
+import org.risetopower.configuration.Configuration
 
-class MessagesTest extends FunSuite {
+class MessagesTest extends FunSuite with BeforeAndAfter{
+
+  before {
+    Configuration.load()
+  }
 
   test("Get message without parameters") {
     val actualMessage: String = Messages.get("default.message")
