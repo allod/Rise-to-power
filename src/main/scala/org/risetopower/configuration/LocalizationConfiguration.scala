@@ -20,7 +20,7 @@ case class LocalizationConfiguration(
     defaultLanguage: String,
     currentLanguage: String,
     filenamePattern: String,
-    supportedLanguages: Seq[String]) extends CanWriteXML[LocalizationConfiguration] {
+    supportedLanguages: Seq[String]) extends  Configuration with CanWriteXML[LocalizationConfiguration] {
 
   def toXml =
     <localization>

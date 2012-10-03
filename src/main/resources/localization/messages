@@ -5,4 +5,5 @@ menu.exit=Exit
 menu.gameOptions=Game options
 menu.graphicOptions=Graphic options
 menu.soundOptions=Sound options
+menu.localizationOptions=Localization options
 menu.back=Back

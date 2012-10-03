@@ -15,6 +15,7 @@ class OptionsMenuState extends AbstractMenuGameState {
     val gameOptionsButton = TWLFactory.createDefaultButton("menu.gameOptions")
     val graphicsOptionsButton = TWLFactory.createDefaultButton("menu.graphicOptions")
     val soundOptionsButton = TWLFactory.createDefaultButton("menu.soundOptions")
+    val localizationOptionsButton = TWLFactory.createDefaultButton("menu.localizationOptions")
     val backButton = TWLFactory.createDefaultButton("menu.back")
 
     backButton.callback += {
@@ -22,13 +23,14 @@ class OptionsMenuState extends AbstractMenuGameState {
       stateBasedGame.enterState(RiseToPowerStateConstants.MAIN_MENU_ID)
     }
 
-    val layout = new TableLayout(4, 1, 1, 0.5) {
+    val layout = new TableLayout(5, 1, 1, 0.5) {
       setTheme("panel")
     }
 
     layout += gameOptionsButton
     layout += graphicsOptionsButton
     layout += soundOptionsButton
+    layout += localizationOptionsButton
     layout += backButton
 
     panelLayout += layout

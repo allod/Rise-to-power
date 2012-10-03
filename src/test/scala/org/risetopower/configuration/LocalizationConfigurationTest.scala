@@ -6,7 +6,7 @@ import xml.PrettyPrinter
 
 class LocalizationConfigurationTest extends FunSuite {
 
-  test("Check creating LocalizationConfiguration from xml") {
+  test("Creating LocalizationConfiguration from xml") {
     val expectedConfiguration = LocalizationConfiguration(
       messageFileEncoding = Codec.ISO8859,
       defaultLanguage = "ru",
@@ -32,7 +32,7 @@ class LocalizationConfigurationTest extends FunSuite {
 
     assert(actualConfiguration === expectedConfiguration)
   }
-  test("Check serialization to xml") {
+  test("Serialization to xml") {
     val expectedXmlNodes =
       <localization>
         <messageFileEncoding>UTF-8</messageFileEncoding>
